@@ -1,0 +1,93 @@
+import os
+import nibabel as nib
+import numpy as np
+from tqdm import tqdm
+
+# Define input and output directories
+# Careful : the new cropped dataset id should be different from the original dataset id (dataset id for nnunet should be unique)
+
+input_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_IA/imagesTr'
+output_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_cropped/imagesTr'
+mask_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_brain/imagesTr'
+
+input_lab_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_IA/labelsTr'
+output_lab_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_cropped/labelsTr'
+
+# Create the output directories if they do not exist
+os.makedirs(output_im_dir, exist_ok=True)
+os.makedirs(output_lab_dir, exist_ok=True)
+
+def crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, output_lab_dir):
+    """ Crop the images and labels to the brain region defined by the mask. Add padding to the cropped images and labels.
+    Save nifti files"""
+
+    # Get the list of files
+    files = os.listdir(input_im_dir)
+
+    for filename in tqdm(files, desc = "Cropping files", total = len(files)):
+        if filename.endswith('.nii.gz'):
+            unique_id = filename[3:7]  # Extract the unique identifier
+
+            # Process the image
+            image = nib.load(os.path.join(input_im_dir,  'Tr_' + unique_id + '_0000.nii.gz'))
+            mask = nib.load(os.path.join(mask_im_dir, 'Tr_brain_' + unique_id + '_0000.nii.gz','brain.nii.gz'))
+
+            image_data = image.get_fdata()
+            mask_data = mask.get_fdata()
+            #print(image_data.dtype, 'image data type')
+
+            # Process the label
+            label = nib.load(os.path.join(input_lab_dir, 'Tr_' + unique_id + '.nii.gz'))
+            label_data = label.get_fdata()
+
+            # Set all voxels outside of the mask to 0
+            image_data[mask_data == 0] = 0
+
+            # Get the coordinates of the brain region
+            coords = np.where(mask_data)
+            print(coords, 'coordinates')
+            #print(image_data.shape, 'image shape')
+            #print(mask_data.shape, 'mask shape')
+
+             # Get the min and max coordinates for each dimension
+            min_coords = np.min(coords, axis=1)
+            max_coords = np.max(coords, axis=1) + 1  # Add 1 because slicing is exclusive at the upper bound
+
+            # Crop the image and label to the brain region
+            cropped_image_data = image_data[min_coords[0]:max_coords[0], min_coords[1]:max_coords[1], min_coords[2]:max_coords[2]]
+            cropped_label_data = label_data[min_coords[0]:max_coords[0], min_coords[1]:max_coords[1], min_coords[2]:max_coords[2]]
+
+            # Add a little bit of padding 
+
+            # Calculate the padding size for each dimension
+            padding = [(0, int(dim * 0.05)) for dim in cropped_image_data.shape]
+            # Add the padding to the cropped data
+            padded_image_data = np.pad(cropped_image_data, padding)
+            # Create a new Nifti1Image with the padded data
+            padded_image = nib.Nifti1Image(padded_image_data, image.affine, image.header)
+            # Save the padded image
+            nib.save(padded_image, os.path.join(output_im_dir, 'Tr_cropped_' + unique_id + '_0000.nii.gz'))
+
+            # Add the padding to the cropped label data
+            padded_label_data = np.pad(cropped_label_data, padding)
+            # Create a new Nifti1Image with the padded label data
+            padded_label = nib.Nifti1Image(padded_label_data, label.affine, label.header)
+            # Save the padded label
+            nib.save(padded_label, os.path.join(output_lab_dir, 'Tr_cropped_' + unique_id + '.nii.gz'))
+
+
+            # Warning : check the label(gt) volume after the segmentation (should be the same) 
+            # sum voxels = volume 
+
+            # Compute the initial volume of the label
+            initial_volume = np.sum(label_data)
+            print(initial_volume, 'initial volume')
+            # Compute the final volume of the label
+            final_volume = np.sum(cropped_label_data)
+            print(final_volume, 'final volume')
+            # Check if the initial volume is the same as the final volume
+            if initial_volume != final_volume:
+                print(f"Warning: The initial volume ({initial_volume}) is not the same as the final volume ({final_volume}).")
+       
+                
+crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, output_lab_dir)
