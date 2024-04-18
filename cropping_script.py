@@ -5,13 +5,17 @@ from tqdm import tqdm
 
 # Define input and output directories
 # Careful : the new cropped dataset id should be different from the original dataset id (dataset id for nnunet should be unique)
+# Careful : add the dataset.json file before running nnunet on Dataset059_IA
+# Careful : I need to crop the test dataset too before prediction-evaluation pipeline ! 
 
-input_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_IA/imagesTr'
-output_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_cropped/imagesTr'
-mask_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_brain/imagesTr'
+# Dataset059_IA = cropped and padded Dataset057_IA 
 
-input_lab_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_IA/labelsTr'
-output_lab_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_cropped/labelsTr'
+input_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset057_IA/imagesTr'
+output_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/imagesTr'
+mask_im_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset057_brain/imagesTr'
+
+input_lab_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset057_IA/labelsTr'
+output_lab_dir = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTr'
 
 # Create the output directories if they do not exist
 os.makedirs(output_im_dir, exist_ok=True)
@@ -30,22 +34,25 @@ def crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, 
 
             # Process the image
             image = nib.load(os.path.join(input_im_dir,  'Tr_' + unique_id + '_0000.nii.gz'))
-            mask = nib.load(os.path.join(mask_im_dir, 'Tr_brain_' + unique_id + '_0000.nii.gz','brain.nii.gz'))
+            mask = nib.load(os.path.join(mask_im_dir, 'Tr_brain_' + unique_id + '_0000.nii.gz'))
 
             image_data = image.get_fdata()
             mask_data = mask.get_fdata()
-            #print(image_data.dtype, 'image data type')
+            #print(f"Image data type before cropping: {image_data.dtype}")
+
 
             # Process the label
             label = nib.load(os.path.join(input_lab_dir, 'Tr_' + unique_id + '.nii.gz'))
             label_data = label.get_fdata()
+            #print(f"Label data type before cropping: {label_data.dtype}")
+
 
             # Set all voxels outside of the mask to 0
             image_data[mask_data == 0] = 0
 
             # Get the coordinates of the brain region
             coords = np.where(mask_data)
-            print(coords, 'coordinates')
+            #print(coords, 'coordinates')
             #print(image_data.shape, 'image shape')
             #print(mask_data.shape, 'mask shape')
 
@@ -56,6 +63,9 @@ def crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, 
             # Crop the image and label to the brain region
             cropped_image_data = image_data[min_coords[0]:max_coords[0], min_coords[1]:max_coords[1], min_coords[2]:max_coords[2]]
             cropped_label_data = label_data[min_coords[0]:max_coords[0], min_coords[1]:max_coords[1], min_coords[2]:max_coords[2]]
+            #print(f"Cropped image data type: {cropped_image_data.dtype}")
+            #print(f"Cropped label data type: {cropped_label_data.dtype}")
+
 
             # Add a little bit of padding 
 
@@ -65,6 +75,7 @@ def crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, 
             padded_image_data = np.pad(cropped_image_data, padding)
             # Create a new Nifti1Image with the padded data
             padded_image = nib.Nifti1Image(padded_image_data, image.affine, image.header)
+            #print(f"Padded image data type: {padded_image_data.dtype}")
             # Save the padded image
             nib.save(padded_image, os.path.join(output_im_dir, 'Tr_cropped_' + unique_id + '_0000.nii.gz'))
 
@@ -72,6 +83,7 @@ def crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, 
             padded_label_data = np.pad(cropped_label_data, padding)
             # Create a new Nifti1Image with the padded label data
             padded_label = nib.Nifti1Image(padded_label_data, label.affine, label.header)
+            #print(f"Padded label data type: {padded_label_data.dtype}")
             # Save the padded label
             nib.save(padded_label, os.path.join(output_lab_dir, 'Tr_cropped_' + unique_id + '.nii.gz'))
 
@@ -81,13 +93,13 @@ def crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, 
 
             # Compute the initial volume of the label
             initial_volume = np.sum(label_data)
-            print(initial_volume, 'initial volume')
+            #print(initial_volume, 'initial volume')
             # Compute the final volume of the label
             final_volume = np.sum(cropped_label_data)
-            print(final_volume, 'final volume')
+            #print(final_volume, 'final volume')
             # Check if the initial volume is the same as the final volume
             if initial_volume != final_volume:
-                print(f"Warning: The initial volume ({initial_volume}) is not the same as the final volume ({final_volume}).")
+                print(f"Warning: The initial volume ({initial_volume}) is not the same as the final volume ({final_volume}) for image with id {unique_id}")
        
                 
 crop_to_brain_mask(input_im_dir, mask_im_dir, output_im_dir, input_lab_dir, output_lab_dir)
