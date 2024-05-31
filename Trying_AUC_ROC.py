@@ -1,11 +1,7 @@
-""" Trying to understand AUC-ROC curve """
 
-""" Final code to compute all the metrics on CT data, save intermediate results for connected components, 
-aggregated mean metrics. No confusion matrix.
-
-- Change the Hausdorf distance function to the test_Hausdorf_v2 ! 
-
-- Add AUC/ROC 
+""" Final code to compute all the metrics on CT/MR data, save intermediate results for connected components, 
+aggregated mean metrics. It has AUC, AP, Hausdorff distance and all the basic metrics 
+(accuracy, precision, recall, sensitivity, DSC). No confusion matrix.
 
 """
 
@@ -19,6 +15,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
 from medpy.metric import hd95
+from sklearn.metrics import roc_curve
 
 def compute_metrics(pred, gt):
     """ Returns TP, TN, FP, FN counts for two binary masks. """
@@ -107,8 +104,8 @@ def process_files(pred_files, gt_files):
     
     # Convert results to DataFrame
     df = pd.DataFrame(all_results)
-    df.to_csv("component_wise_metrics_auc.csv", index=False)
-    print("Component-wise results saved to component_wise_metrics_auc.csv")
+    df.to_csv("component_wise_MR_f0.csv", index=False)
+    print("Component-wise results saved to component_wise_MR_f0.csv")
 
     # Aggregate metrics
     tp = df[df['Match Type'] == 'TP'].shape[0]
@@ -132,7 +129,6 @@ def process_files(pred_files, gt_files):
     precision = tp / (tp + fp) if (tp + fp) > 0 else 0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 0
     sensitivity = recall  # Same as recall
-    #specificity = df[df['Match Type'] == 'TN'].shape[0] / (df[df['Match Type'] == 'TN'].shape[0] + fp) if (df[df['Match Type'] == 'TN'].shape[0] + fp) > 0 else 0
     dsc = 2 * tp / (2 * tp + fp + fn) if (2 * tp + fp + fn) > 0 else 0
     
 
@@ -152,40 +148,18 @@ def process_files(pred_files, gt_files):
         
     }
     df_aggregated = pd.DataFrame([aggregated_metrics])
-    df_aggregated.to_csv("aggregated_metrics_auc.csv", index=False)
-    print("Aggregated results saved to aggregated_metrics_auc.csv")
+    df_aggregated.to_csv("aggregated_MR_f0.csv", index=False)
+    print("Aggregated results saved to aggregated_MR_f0.csv")
 
 
 if __name__ == "__main__":
         
-    # Example usage of the function
-
-    pred_files = [
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0001.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0002.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0003.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0004.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0005.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0006.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0007.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0008.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0009.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset059_IA/postprocessed_internal/Ts_cropped_0010.nii.gz'
-    ]
-
-    gt_files = [
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0001.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0002.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0003.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0004.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0005.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0006.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0007.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0008.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0009.nii.gz',
-        '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset059_IA/labelsTs_internal/Ts_cropped_0010.nii.gz'
-    ]
+    pred_files_path = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_results/Dataset060_IA/postprocessed/postprocessed_f0'
+    gt_files_path = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset060_IA/labelsTs'
+    gt_files = [os.path.join(gt_files_path, f) for f in os.listdir(gt_files_path) if f.endswith('.nii.gz')]
+    pred_files = [os.path.join(pred_files_path, f) for f in os.listdir(pred_files_path) if f.endswith('.nii.gz')]
     process_files(pred_files, gt_files)
+
 
 
 
