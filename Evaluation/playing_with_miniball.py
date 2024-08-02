@@ -1,4 +1,4 @@
-# Final function for the whole folder 
+# This script allowed me to visualize the predicted aneurysms characteristics in a csv file. 
 
 import os
 import numpy as np
