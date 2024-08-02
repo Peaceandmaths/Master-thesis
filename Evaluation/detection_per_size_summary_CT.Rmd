@@ -1,0 +1,54 @@
+---
+title: "Detection per size CT"
+author: "Ekaterina Golubeva"
+date: '2024-07-24'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(tidyr)
+
+# Input data
+data <- data.frame(
+  Size.Category = c("<5mm", "<5mm", "<5mm", "<5mm", "<5mm",
+                    "5-10mm", "5-10mm", "5-10mm", "5-10mm", "5-10mm",
+                    ">10mm", ">10mm", ">10mm", ">10mm", ">10mm"),
+  Recall = c(41.67, 41.67, 50.00, 41.67, 41.67,
+             88.57, 85.92, 85.92, 81.43, 84.29,
+             93.48, 93.33, 95.74, 95.56, 93.33),
+  FPs.per.case = c(0.9470198675496688, 0.6225165562913907, 0.5364238410596026, 0.48344370860927155, 0.6688741721854304,
+                   0.1986754966887417, 0.1986754966887417, 0.12582781456953643, 0.16556291390728478, 0.1390728476821192,
+                   0.046357615894039736, 0.026490066225165563, 0.013245033112582781, 0.033112582781456956, 0.019867549668874173)
+)
+
+# Function to compute mean and 95% CI
+mean_ci <- function(x) {
+  mean_val <- mean(x)
+  ci <- t.test(x)$conf.int
+  return(c(mean = mean_val, CI_lower = ci[1], CI_upper = ci[2]))
+}
+
+# Group by Size Category and compute statistics
+results <- data %>%
+  group_by(Size.Category) %>%
+  summarise(
+    Recall_mean = mean_ci(Recall)[1],
+    Recall_CI_lower = mean_ci(Recall)[2],
+    Recall_CI_upper = mean_ci(Recall)[3],
+    FPs_per_case_mean = mean_ci(FPs.per.case)[1],
+    FPs_per_case_CI_lower = mean_ci(FPs.per.case)[2],
+    FPs_per_case_CI_upper = mean_ci(FPs.per.case)[3]
+  )
+
+# Display the results
+print(results)
+
+
+
+```
