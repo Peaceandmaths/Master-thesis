@@ -101,11 +101,10 @@ To reproduce the workflow described in this repository, follow the steps below:
 ## References : 
 
 - nnUnet : Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring 
-method for deep learning-based biomedical image segmentation. Nature methods, 18(2), 203-211. 
+method for deep learning-based biomedical image segmentation. Nature methods, https://doi.org/10.1038/s41592-020-01008-z .
 
 - CT dataset : Z.-H. Bo. Large IA Segmentation dataset. Version 1. This dataset is for non-commercial
-purposes. Feb. 2021. DOI: 10 . 5281 / zenodo . 6801398. URL: https : / /
-zenodo.org/record/6801398.
+purposes. Feb. 2021. DOI: 10 . 5281 / zenodo . 6801398. URL: https://zenodo.org/record/6801398 .
 
 - MR dataset : T. Di Noto et al. “Towards Automated Brain Aneurysm Detection in TOFMRA: Open Data, Weak Labels, and Anatomical Knowledge”. In: Neuroinformatics 21.1 (2023), pp. 21–34. ISSN: 1559-0089. DOI: 10.1007/s12021-022-
 09597-0. URL: https://doi.org/10.1007/s12021-022-09597-0.
