@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This code tests TotalSegmentator pipeline on 10 images only ( in Dataset055 ) 
+
 # Directory paths
 input_images_dir="/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_IA/imagesTr"
 output_images_dir="/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_brain/imagesTr"
