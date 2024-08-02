@@ -131,3 +131,20 @@ print(df_pivot)
 directory = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset057_IA/imagesTr' 
 low_res_images = list_low_resolution_nifti_images(directory)
 print("Low resolution NIfTI images:", low_res_images)
+
+
+
+############ MR data: when merging mulitple aneurysms I need the merged label to have the same shape as original image 
+
+import nibabel as nib
+
+def print_resolution(image_path):
+    """Load data from image, read nifti header and prints image dimensions/resolution"""
+    img = nib.load(image_path)
+    print(f"Resolution for {image_path}: {img.header.get_zooms()}")
+
+# Call the function for each image
+print_resolution('/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset_MR_original/Images_and_labels/manual_masks/sub-327/ses-20110923/anat/sub-327_ses-20110923_desc-brain_mask.nii.gz')
+print_resolution('/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset_MR_original/Images_and_labels/manual_masks/sub-327/ses-20110923/anat/sub-327_ses-20110923_desc-Lesion_1_mask.nii.gz')
+print_resolution('/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset_MR_original/Images_and_labels/manual_masks/sub-327/ses-20110923/anat/sub-327_ses-20110923_desc-Lesion_2_mask.nii.gz')
+print_resolution('/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset_MR_original/Images_and_labels/manual_masks/sub-327/ses-20110923/anat/sub-327_ses-20110923_desc-Lesion_3_mask.nii.gz')
