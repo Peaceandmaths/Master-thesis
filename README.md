@@ -17,9 +17,9 @@ ________________________________________________________________________________
 
 ## Requirements
 
-- Python 3.x
+- Python 3.12.4
 - Required Python packages (list in `requirements.txt`)
-- nnU-Net framework
+- nnU-Net  
 
 ## Data Preparation
 
