@@ -1,3 +1,15 @@
+""" 
+
+This code described the data preparation workflow, from copying the raw data, creting small subset for testing, 
+renaming files according to the nnunet format (added lookup table to track the change), 
+to reorganizing files into nnunet folders and running nnnuent scripts ( verify data integrity, preprocessing, training, evaluation, post-processing).
+
+There's a history of my experiments with changint he default number of epochs ( from 1000 to 2000) and comparing results from 5 folds with the best model automatically chosen by nnunet. 
+
+Finally, it contains a function to create a bash script that runs the whole pipeline, given the dataset id and fold number. 
+
+"""
+
 # Raw data copy is in the Dataset001_IA folder
 # The whole traianing + internal_validation set is = 1186 + 152 = 1338 files
 
@@ -18,33 +30,7 @@ dest_dir_images = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset050
 dest_dir_labels = '/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset050_IA/labelsTr'
 
 
-def create_small_dataset_1(src_dir_images, src_dir_labels, dest_dir_images, dest_dir_labels):
-    # Get list of files
-    files_images = os.listdir(src_dir_images)
-    files_labels = os.listdir(src_dir_labels)
-
-    # Ensure that for every image file, there is a corresponding label file
-    for file in files_images:
-        if file not in files_labels:
-            raise ValueError(f"No matching label for image {file}")
-
-    # Shuffle list and select first 135 files
-    random.shuffle(files_images)
-    selected_files_images = files_images[:135]
-    selected_files_labels = [f for f in selected_files_images]
-
-    # Make sure destination directories exist
-    os.makedirs(dest_dir_images, exist_ok=True)
-    os.makedirs(dest_dir_labels, exist_ok=True)
-
-    # Copy selected files
-    for file in selected_files_images:
-        shutil.copy(os.path.join(src_dir_images, file), dest_dir_images)
-
-    for file in selected_files_labels:
-        shutil.copy(os.path.join(src_dir_labels, file), dest_dir_labels)
-
-def create_small_dataset_2(src_dir_images, src_dir_labels, dest_dir_images, dest_dir_labels):
+def create_small_dataset(src_dir_images, src_dir_labels, dest_dir_images, dest_dir_labels):
     """ Select 108 files from the first 1186 files and 27 files after the 1186th file( that have Ts prefix)"""
     # Get list of files
     files_images = sorted(os.listdir(src_dir_images))
@@ -70,7 +56,7 @@ def create_small_dataset_2(src_dir_images, src_dir_labels, dest_dir_images, dest
     for file in selected_files_labels:
         shutil.copy(os.path.join(src_dir_labels, file), dest_dir_labels)
 
-create_small_dataset_2(src_dir_images, src_dir_labels, dest_dir_images, dest_dir_labels)
+create_small_dataset(src_dir_images, src_dir_labels, dest_dir_images, dest_dir_labels)
 
 
 # Renaming files 
