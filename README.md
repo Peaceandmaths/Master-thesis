@@ -66,6 +66,9 @@ Flowchart fro the CT data processing with Total Segmentator
 
 ## Total Segmentator
 
+- Once the brain masks are available, we crop the original images to the brain region and add padding. 
+
+![image](https://github.com/user-attachments/assets/4c86f91a-a957-4179-a91c-3f8fe2002d00)
 
 
 
@@ -94,6 +97,9 @@ Flowchart fro the CT data processing with Total Segmentator
    - **Script**: `nnUNetv2_apply_postprocessing`
    - **Input**: `Dataset057_IA`
    - **Description**: Apply post-processing to the predictions to refine results.
+	• The post-processing is done by the default nnunet procedure, the code can be found here (https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunetv2/postprocessing/remove_connected_components.pY), remove all but the largest component code is here (https://github.com/MIC-DKFZ/acvl_utils/blob/master/acvl_utils/morphology/morphology_helper.py#L33) 
+	 The way it works is that it first does a connected component analysis, which also gives the size per component and then filters for the largest component. 
+	• An additional post-processing step is removing connected components smaller than 1mm in diameter. This is done in the  script
 
 ## Evaluation
 
