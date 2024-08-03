@@ -66,10 +66,11 @@ Flowchart fro the CT data processing with Total Segmentator
 
 ## Total Segmentator
 
-- Once the brain masks are available, we crop the original images to the brain region and add padding. 
+- See instructions to use [TotalSegmentator](https://github.com/wasserth/TotalSegmentator). 
+- Once the brain masks are available, we crop the original images to the brain region and add padding.
+- Warning: check the volume of the label before and after cropping, TS shouldn't cut out labels inside the brain. But it is possible to see aneurysms outside of the brain. 
 
-![image](https://github.com/user-attachments/assets/4c86f91a-a957-4179-a91c-3f8fe2002d00)
-
+![image](https://github.com/user-attachments/assets/413fc9af-e1d8-4d1b-9340-2a386416073c)
 
 
 ## Model Training
@@ -134,6 +135,8 @@ To reproduce the workflow described in this repository, follow the steps below:
 
 - nnUnet : Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring 
 method for deep learning-based biomedical image segmentation. Nature methods, https://doi.org/10.1038/s41592-020-01008-z .
+
+- TotalSegmentaor : Akinci D'Antonoli, T., Berger, L. K., Indrakanti, A. K., Vishwanathan, N., Weiß, J., Jung, M., Berkarda, Z., Rau, A., Reisert, M., Küstner, T., Walter, A., Merkle, E. M., Segeroth, M., Cyriac, J., Yang, S., & Wasserthal, J. (2024). TotalSegmentator MRI: Sequence-Independent Segmentation of 59 Anatomical Structures in MR Images. arXiv preprint arXiv:2405.19492. https://doi.org/10.48550/arXiv.2405.19492.
 
 - CT dataset : Z.-H. Bo. Large IA Segmentation dataset. Version 1. This dataset is for non-commercial
 purposes. Feb. 2021. DOI: 10 . 5281 / zenodo . 6801398. URL: https://zenodo.org/record/6801398 .
