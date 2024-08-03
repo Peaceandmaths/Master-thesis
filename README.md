@@ -40,9 +40,8 @@ ________________________________________________________________________________
 ### CT dataset (id = 059)
 Flowchart for the CT data preparation and nnunet commands ( without TotalSegmentator ) 
 
-<p align="center">
 ![image](https://github.com/Peaceandmaths/Master-thesis/assets/117741432/a7f3aa2a-2c49-476b-9c8c-379a2918eecd)
-</p>
+
 
  - CT raw dataset was collected from open source Zendo ( see reference), including training images (imagesTr, n = 1186)) and test images (imagesTs_internal, n= 152)).
 - The whole dataset was copied to perform further modifications on the copy ( renaming, preprocessing etc).
@@ -50,9 +49,9 @@ Flowchart for the CT data preparation and nnunet commands ( without TotalSegment
 -  [Rename the test set](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Preparation/renaming_test_files.py) too ( it was named differently from the train data).
 
 Flowchart fro the CT data processing with Total Segmentator 
-<p align="center">
+
 ![image](https://github.com/user-attachments/assets/02b2bd86-5da9-4035-b75a-5760e3a1d255)
-</p>
+
 
 
 ### MR dataset (id = 060)
@@ -62,9 +61,9 @@ Flowchart fro the CT data processing with Total Segmentator
 - Files should have been [renamed](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Preparation/renaming_files_nnUnet_format.py) to nnunet format.
 - Split all training files into validation and test [here](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Preparation/train_val_test_MR_manual_split.py). 
 
-<p align="center">
+
 ![image](https://github.com/user-attachments/assets/ea175d24-c4e5-4531-80b7-7d46ec4f4e7d)
-</p>
+
 
 ## Total Segmentator
 
