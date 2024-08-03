@@ -66,9 +66,10 @@ Flowchart fro the CT data processing with Total Segmentator
 
 ## Total Segmentator
 
-- See instructions to use [TotalSegmentator](https://github.com/wasserth/TotalSegmentator). 
-- Once the brain masks are available, we crop the original images to the brain region and add padding.
-- Warning: check the volume of the label before and after cropping, TS shouldn't cut out labels inside the brain. But it is possible to see aneurysms outside of the brain. 
+- See instructions to use TotalSegmentator [here](https://github.com/wasserth/TotalSegmentator).
+- The [bash script](https://github.com/Peaceandmaths/Master-thesis/blob/main/Total%20Segmentator/total_segmentator_10test.sh) to run TS over multiple images in a folder
+- Once the brain masks are available, we [crop](https://github.com/Peaceandmaths/Master-thesis/blob/main/Total%20Segmentator/cropping_script.py) the original images to the brain region and add padding.
+- Warning: check the volume of the label before and after cropping, TS shouldn't cut out labels inside the brain. But it is possible to see aneurysms outside of the brain.
 
 ![image](https://github.com/user-attachments/assets/413fc9af-e1d8-4d1b-9340-2a386416073c)
 
