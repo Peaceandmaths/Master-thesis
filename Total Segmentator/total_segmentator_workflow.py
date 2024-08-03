@@ -1,4 +1,6 @@
-Here's how you can prepare the scripts based on your requirements. Note that the actual implementation of some steps, especially the cropping of images based on segmentation coordinates, would typically involve some form of scripting beyond simple bash commands, likely involving Python and libraries for handling NIfTI files (such as nibabel). This part is simplified in the explanation since the precise method can vary greatly depending on the data structure and desired outcome.
+# Here are the steps from the whole Total segmentator pipeline : 
+# Get brain masks from TS, crop original image 
+# Note that the actual implementation of the 3 steps is done in 3 separate Python/bash scripts. 
 
 ### 1. Bash script for applying TotalSegmentator on each image
 
