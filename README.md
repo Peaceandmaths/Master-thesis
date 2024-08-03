@@ -8,18 +8,27 @@ ________________________________________________________________________________
 ## Table of Contents
 
 1. [Requirements](#requirements)
-2. [Data Preparation](#data-preparation)
-3. [Model Training](#model-training)
-4. [Model Prediction](#model-prediction)
-5. [Post-processing](#post-processing)
-6. [Evaluation](#evaluation)
-7. [Running the Workflow](#running-the-workflow)
+2. [Data Exploration](#data-exploration)
+3. [Data Preparation](#data-preparation)
+4. [Model Training](#model-training)
+5. [Model Prediction](#model-prediction)
+6. [Post-processing](#post-processing)
+7. [Evaluation](#evaluation)
+8. [Running the Workflow](#running-the-workflow)
 
 ## Requirements
 
 - Python 3.12.4
 - Required Python packages (list in `requirements.txt`)
 - nnU-Net version 2.2.
+
+## Data Exploration 
+
+- [Check_image_label_shapes](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Exploration/Check_image_label_shapes.py) check that each image has a corresponding label of the same shape. For the CT dataset one of the images didn't have a label of the same size, so it was discarded.
+- [Checking_image_resolution](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Exploration/Checking_image_resolution.py) categorizes images from the CT dataset into groups of different resolution (in terms of voxel size).
+- [count_an_per_size_trainset](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Exploration/count_an_per_size_trainset.py) counts aneurysm sizes in the original train dataset in different size categories, with my definition of aneurysm size.
+
+![image](https://github.com/user-attachments/assets/b5d8f5f7-d770-4242-b961-1dc02771cb34)
 
 ## Data Preparation
 
