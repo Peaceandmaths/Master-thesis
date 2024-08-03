@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This code tests TotalSegmentator pipeline on 10 images only ( in Dataset055 ) 
+# Change the dataset id to run TS on your dataset 
 
 # Directory paths
 input_images_dir="/data/golubeka/nnUNet_Frame/nnUNet_data/nnUNet_raw/Dataset055_IA/imagesTr"
