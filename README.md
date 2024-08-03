@@ -28,8 +28,6 @@ ________________________________________________________________________________
 - [Checking_image_resolution](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Exploration/Checking_image_resolution.py) categorizes images from the CT dataset into groups of different resolution (in terms of voxel size).
 - [count_an_per_size_trainset](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Exploration/count_an_per_size_trainset.py) counts aneurysm sizes in the original train dataset in different size categories, with my definition of aneurysm size.
 
-![image](https://github.com/user-attachments/assets/b5d8f5f7-d770-4242-b961-1dc02771cb34)
-
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b5d8f5f7-d770-4242-b961-1dc02771cb34" alt="Image Description">
 </p>
@@ -37,7 +35,10 @@ ________________________________________________________________________________
 ## Data Preparation
 
 Flowchart for the CT data preparation and nnunet commands ( without TotalSegmentator ) 
+
+<p align="center">
 ![image](https://github.com/Peaceandmaths/Master-thesis/assets/117741432/a7f3aa2a-2c49-476b-9c8c-379a2918eecd)
+</p>
 
 1. **Raw Data Collection**:
    - **Files**: Dataset001_IA
