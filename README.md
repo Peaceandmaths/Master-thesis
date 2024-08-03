@@ -76,44 +76,26 @@ Flowchart fro the CT data processing with Total Segmentator
 
 ## Model Training
 
+NN-UNet model training consists of runnnig the following NN-UNet commands consecutively : 
+1) `nnUNetv2_plan_and_preprocess` and `--verify_dataset_integrity` - Generate dataset fingerprint and plans 
+2) `nnUNetv2_train` - Train the models using the 5-fold cross-validation approach, choose `3d_fullres`
+3) `nnUNetv2_find_best_configuration`- Find the best configuration for the dataset using the specified folds.
+4) `nnUNetv2_predict` - Generate predictions for the internal test set.
+5) `nnUNetv2_apply_postprocessing` - Apply post-processing to the predictions to refine results.
 
-Model training consists of runnnig the following NN-UNet commands consecutively : 
- `nnUNetv2_find_best_configuration`- Find the best configuration for the dataset using the specified folds.
- `nnUNetv2_train` - Train the models using the 5-fold cross-validation approach, choose `3d_fullres`
- `nnUNetv2_predict` - Generate predictions for the internal test set.
- `nnUNetv2_apply_postprocessing` - Apply post-processing to the predictions to refine results.
+[This bash script](https://github.com/Peaceandmaths/Master-thesis/blob/main/NN-Unet%20pipeline/preprocess_train_find_best_060.sh) runs all these steps automatically from step 1 to 3. Steps from 3 till 5 are automated [here](NN-Unet pipeline/script_060_4.sh). There's a break at step 3 because it needs user intervention. You have to see generated instructions and run the code as specified. 
+
 
 The post-processing is done by the default nnunet procedure, the code can be found [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunetv2/postprocessing/remove_connected_components.pY), remove all but the largest component code is [here](https://github.com/MIC-DKFZ/acvl_utils/blob/master/acvl_utils/morphology/morphology_helper.py#L33). The way it works is that it first does a connected component analysis, which also gives the size per component and then filters for the largest component. An additional post-processing step is removing connected components smaller than 1mm in diameter. This is done in the evaluation script (see below). 
 
 
 ## Evaluation
 
-1. **Evaluate Models**:
-   - **Script**: `nnUNetv2_evaluate`
-   - **Input**: `Dataset057_IA`
-   - **Description**: Evaluate the model performance using various metrics.
+NN-UNet generates an evaluation summary that gives some basic metrics across all images on the vowel-level. 
+I implemented my own evaluation pipeline automated [here](Evaluation/all_evaluation_metrics.sh). 
 
-## Running the Workflow
+![image](https://github.com/user-attachments/assets/b3eb469b-420a-479c-9b06-c4ca7d84bea7)
 
-To reproduce the workflow described in this repository, follow the steps below:
-
-1. **Step 1: Data Preparation**:
-   - Collect raw data and store it in the specified format.
-   - Run the `Data_version_control_latest.py` script to prepare the dataset.
-   - Execute the `nnunetv2_plan_and_preprocess` command to preprocess the data.
-
-2. **Step 2: Model Training**:
-   - Run `nnUNetv2_find_best_configuration` to identify the best settings for your model.
-   - Execute `nnUNetv2_train` to train the model using the preprocessed data.
-
-3. **Step 3: Model Prediction**:
-   - Use the `nnUNetv2_predict` script to generate predictions on the test set.
-
-4. **Step 4: Post-processing**:
-   - Apply post-processing using `nnUNetv2_apply_postprocessing` to refine your predictions.
-
-5. **Step 5: Evaluation**:
-   - Finally, run the `nnUNetv2_evaluate` script to evaluate the performance of your models using various metrics.
 
 ## References : 
 
