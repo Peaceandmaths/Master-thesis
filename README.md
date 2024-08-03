@@ -60,9 +60,8 @@ Flowchart fro the CT data processing with Total Segmentator
 - For patients with multiple aneurysms, there were multiple label files with one aneurysm per each label file. I [merged](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Preparation/Merge_lesions_MR.py) multiple lesion in the same label files so each aptient has only one corresponding label.
 - Files should have been [renamed](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Preparation/renaming_files_nnUnet_format.py) to nnunet format.
 - Split all training files into validation and test [here](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Preparation/train_val_test_MR_manual_split.py). 
-
-
-![image](https://github.com/user-attachments/assets/ea175d24-c4e5-4531-80b7-7d46ec4f4e7d)
+- The MR images had been pre-cropped to encompass the brain and the specific region of interest within the brain (Circle of Willis). Consequently, the MR dataset did not require processing through the Total Segmentator step, unlike the CT dataset.
+![image](https://github.com/user-attachments/assets/ad85cc04-7e96-426c-9a0d-01d408845615)
 
 
 ## Total Segmentator
