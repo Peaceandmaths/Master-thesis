@@ -19,7 +19,7 @@ ________________________________________________________________________________
 
 - Python 3.12.4
 - Required Python packages (list in `requirements.txt`)
-- nnU-Net  
+- nnU-Net version 2.2.
 
 ## Data Preparation
 
