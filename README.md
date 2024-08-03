@@ -30,6 +30,10 @@ ________________________________________________________________________________
 
 ![image](https://github.com/user-attachments/assets/b5d8f5f7-d770-4242-b961-1dc02771cb34)
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b5d8f5f7-d770-4242-b961-1dc02771cb34" alt="Image Description">
+</p>
+
 ## Data Preparation
 
 Flowchart for the CT data preparation and nnunet commands ( without TotalSegmentator ) 
