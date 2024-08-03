@@ -4,7 +4,7 @@ This code described the data preparation workflow, from copying the raw data, cr
 renaming files according to the nnunet format (added lookup table to track the change), 
 to reorganizing files into nnunet folders and running nnnuent scripts ( verify data integrity, preprocessing, training, evaluation, post-processing).
 
-There's a history of my experiments with changint he default number of epochs ( from 1000 to 2000) and comparing results from 5 folds with the best model automatically chosen by nnunet. 
+There's a history of my experiments with changin the default number of epochs ( from 1000 to 2000) and comparing results from 5 folds with the best model automatically chosen by nnunet. 
 
 Finally, it contains a function to create a bash script that runs the whole pipeline, given the dataset id and fold number. 
 
