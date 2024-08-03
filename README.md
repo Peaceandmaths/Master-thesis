@@ -11,11 +11,9 @@ ________________________________________________________________________________
 2. [Data Exploration](#data-exploration)
 3. [Data Preparation](#data-preparation)
 4. [Total Segmentator](#total-segmentator)
-5. [Model Training](#model-training)
-6. [Model Prediction](#model-prediction)
-7. [Post-processing](#post-processing)
-8. [Evaluation](#evaluation)
-9. [Running the Workflow](#running-the-workflow)
+5. [NN-UNet pipeline](#nn-unet-pipeline)
+6. [Evaluation](#evaluation)
+7. [References](#references)
 
 ## Requirements
 
@@ -52,8 +50,6 @@ Flowchart fro the CT data processing with Total Segmentator
 
 ![image](https://github.com/user-attachments/assets/02b2bd86-5da9-4035-b75a-5760e3a1d255)
 
-
-
 ### MR dataset (id = 060)
 
 - Originally, in the MR dataset available online, only patients with aneurysms had corresponding label files, the control participants didn't have label files. I [created empty images](https://github.com/Peaceandmaths/Master-thesis/blob/main/Data%20Preparation/Creating_empty_labels_MR.py) with the same dimensions to provide nnunet with images and labels files in pairs.
@@ -74,16 +70,17 @@ Flowchart fro the CT data processing with Total Segmentator
 ![image](https://github.com/user-attachments/assets/413fc9af-e1d8-4d1b-9340-2a386416073c)
 
 
-## Model Training
+## NN-UNet pipeline
 
-NN-UNet model training consists of runnnig the following NN-UNet commands consecutively : 
+NN-UNet training consists of runnnig the following commands consecutively : 
 1) `nnUNetv2_plan_and_preprocess` and `--verify_dataset_integrity` - Generate dataset fingerprint and plans 
 2) `nnUNetv2_train` - Train the models using the 5-fold cross-validation approach, choose `3d_fullres`
 3) `nnUNetv2_find_best_configuration`- Find the best configuration for the dataset using the specified folds.
 4) `nnUNetv2_predict` - Generate predictions for the internal test set.
 5) `nnUNetv2_apply_postprocessing` - Apply post-processing to the predictions to refine results.
+6) `nnUNetv2_evaluate_folder` - Evaluate postprocessed perdictions compared to the ground truth labels. 
 
-[This bash script](https://github.com/Peaceandmaths/Master-thesis/blob/main/NN-Unet%20pipeline/preprocess_train_find_best_060.sh) runs all these steps automatically from step 1 to 3. Steps from 3 till 5 are automated [here](NN-Unet pipeline/script_060_4.sh). There's a break at step 3 because it needs user intervention. You have to see generated instructions and run the code as specified. 
+[This bash script](https://github.com/Peaceandmaths/Master-thesis/blob/main/NN-Unet%20pipeline/preprocess_train_find_best_060.sh) runs all these steps automatically from step 1 to 3. Steps from 3 till 6 are automated [here](NN-Unet pipeline/script_060_4.sh). There's a break at step 3 because it needs user intervention. You have to see generated instructions and run the code as specified. 
 
 
 The post-processing is done by the default nnunet procedure, the code can be found [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunetv2/postprocessing/remove_connected_components.pY), remove all but the largest component code is [here](https://github.com/MIC-DKFZ/acvl_utils/blob/master/acvl_utils/morphology/morphology_helper.py#L33). The way it works is that it first does a connected component analysis, which also gives the size per component and then filters for the largest component. An additional post-processing step is removing connected components smaller than 1mm in diameter. This is done in the evaluation script (see below). 
@@ -97,7 +94,7 @@ I implemented my own evaluation pipeline automated [here](Evaluation/all_evaluat
 ![image](https://github.com/user-attachments/assets/b3eb469b-420a-479c-9b06-c4ca7d84bea7)
 
 
-## References : 
+## References
 
 - nnUnet : Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring 
 method for deep learning-based biomedical image segmentation. Nature methods, https://doi.org/10.1038/s41592-020-01008-z .
