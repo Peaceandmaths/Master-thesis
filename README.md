@@ -76,32 +76,15 @@ Flowchart fro the CT data processing with Total Segmentator
 
 ## Model Training
 
-1. **Find Best Configuration**:
-   - **Script**: `nnUNetv2_find_best_configuration`
-   - **Input**: `Dataset057_IA`
-   - **Description**: Find the best configuration for the dataset using the specified folds.
 
-2. **Train Models**:
-   - **Script**: `nnUNetv2_train`
-   - **Input**: `Dataset057_IA`
-   - **Description**: Train the models using the 5-fold cross-validation approach.
+Model training consists of runnnig the following NN-UNet commands consecutively : 
+ `nnUNetv2_find_best_configuration`- Find the best configuration for the dataset using the specified folds.
+ `nnUNetv2_train` - Train the models using the 5-fold cross-validation approach, choose `3d_fullres`
+ `nnUNetv2_predict` - Generate predictions for the internal test set.
+ `nnUNetv2_apply_postprocessing` - Apply post-processing to the predictions to refine results.
 
-## Model Prediction
+The post-processing is done by the default nnunet procedure, the code can be found [here](https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunetv2/postprocessing/remove_connected_components.pY), remove all but the largest component code is [here](https://github.com/MIC-DKFZ/acvl_utils/blob/master/acvl_utils/morphology/morphology_helper.py#L33). The way it works is that it first does a connected component analysis, which also gives the size per component and then filters for the largest component. An additional post-processing step is removing connected components smaller than 1mm in diameter. This is done in the evaluation script (see below). 
 
-1. **Predict**:
-   - **Script**: `nnUNetv2_predict`
-   - **Input**: `Dataset057_IA`
-   - **Description**: Generate predictions for the internal test set.
-
-## Post-processing
-
-1. **Apply Post-processing**:
-   - **Script**: `nnUNetv2_apply_postprocessing`
-   - **Input**: `Dataset057_IA`
-   - **Description**: Apply post-processing to the predictions to refine results.
-	• The post-processing is done by the default nnunet procedure, the code can be found here (https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunetv2/postprocessing/remove_connected_components.pY), remove all but the largest component code is here (https://github.com/MIC-DKFZ/acvl_utils/blob/master/acvl_utils/morphology/morphology_helper.py#L33) 
-	 The way it works is that it first does a connected component analysis, which also gives the size per component and then filters for the largest component. 
-	• An additional post-processing step is removing connected components smaller than 1mm in diameter. This is done in the  script
 
 ## Evaluation
 
