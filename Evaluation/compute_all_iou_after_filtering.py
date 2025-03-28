@@ -11,6 +11,7 @@ import numpy as np
 np.bool = np.bool_
 from tqdm import tqdm
 
+"""
 def process_files(pred_files, gt_files, component_csv_file_name):
     """ Process multiple NIfTI file pairs to calculate and aggregate metrics. """
     all_results = []
@@ -25,6 +26,33 @@ def process_files(pred_files, gt_files, component_csv_file_name):
     #print(f"Component-wise results saved to {component_csv_file_name}")
 
     return results_df
+"""
+def process_files(pred_files, gt_files):
+    """ Process multiple NIfTI file pairs to calculate and aggregate metrics. """
+    all_results = []
+    for pred_file, gt_file in tqdm(zip(pred_files, gt_files), total=len(pred_files), desc="Processing Files"):
+        file_results = compute_validation(pred_file, gt_file)
+
+        # Add DSC to each component-wise result if it's a TP
+        for result in file_results:
+            if result['Match Type'] == 'TP':
+                intersection = result.get('Intersection')
+                pred_size = result.get('Pred Size')
+                gt_size = result.get('GT Size')
+                if intersection is not None and pred_size and gt_size:
+                    denom = pred_size + gt_size
+                    result['DSC'] = 2 * intersection / denom if denom > 0 else 0
+                else:
+                    result['DSC'] = np.nan
+            else:
+                result['DSC'] = np.nan
+
+        all_results.extend(file_results)
+
+    # Convert results to DataFrame
+    df = pd.DataFrame(all_results)
+
+    return df
 
 
 def summarize_metrics(all_metrics_df, dataset):
@@ -100,7 +128,7 @@ if __name__ == "__main__":
             pred_files = [os.path.join(pred_files_path, f) for f in os.listdir(pred_files_path) if f.endswith('.nii.gz')]
             aggregated_csv_file_name = f"aggregated_{dataset}_f{i}_iou_after_filtering.csv"
             component_csv_file_name = f"component_{dataset}_f{i}_iou_after_filtering.csv"
-            results_df = process_files(pred_files, gt_files, component_csv_file_name)
+            results_df = process_files(pred_files, gt_files)
             aggregated_metrics = aggregate_metrics(results_df,aggregated_csv_file_name)
             print(f"Processed {dataset} fold {i}")
             pbar.update()
